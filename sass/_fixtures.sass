@@ -1,0 +1,61 @@
+.fixtures-row
+	border-top: 1px solid rgba(#000, .04)
+	font-size: 15px
+	display: flex
+	justify-content: center
+	align-items: center
+	background: #f6f6f6
+	padding: 5px
+
+	&:hover
+		background: #eee
+
+	a
+		color: #333
+		text-decoration: none
+		display: block
+		
+		&:hover
+			color: $turquoise
+
+	.team-badge
+		@media (max-width: 480px)
+			display: flex
+			justify-content: center
+			align-items: center
+		
+	.team-logo-holder
+		display: inline-block
+		vertical-align: middle
+
+	.team-badge-name
+		display: inline-block
+		vertical-align: middle
+		padding: 0 10px
+
+.fixtures-home-team,
+.fixtures-result,
+.fixtures-away-team
+	display: inline-block
+	vertical-align: top
+
+.fixtures-home-team,
+.fixtures-away-team
+	width: calc(50% - 50px)
+	text-align: left	
+
+.fixtures-home-team
+	text-align: right
+
+.fixtures-result
+	width: 100px
+	text-align: center
+	font-weight: 400
+	color: #444
+
+.fixtures-date
+	text-align: center
+	font-weight: 400
+	font-size: 14px
+	margin-top: 20px
+	padding: 10px 0

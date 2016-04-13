@@ -1,0 +1,101 @@
+.main-nav
+  height: 160px;
+  text-align: center
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  a
+    display: inline-block
+    vertical-align: top
+    font-size: 28px
+    margin: 0 10px
+    text-decoration: none
+    font-weight: 100
+    color: #fff
+    opacity: .7
+
+    &.active,
+    &:hover
+      color: #fff
+      box-shadow: 0 1px 0 0 rgba(#fff, .8)
+
+    &.active
+      opacity: 1
+
+  a.link-back
+    cursor: pointer
+    
+    img
+      vertical-align: middle
+      text-decoration: none
+
+    &:hover
+      border: none
+
+
+  .select
+    position: relative
+    display: inline-block
+    cursor: pointer
+    margin-bottom: 20px;
+
+    &:after
+      border: 1px solid #fff
+      border-right: 0
+      border-top: 0
+      content: " "
+      display: block
+      height: 7px
+      pointer-events: none
+      position: absolute
+      transform: rotate(-45deg)
+      width: 7px
+      margin-top: -6px
+      right: 16px
+      top: 50%
+
+    select
+      -moz-appearance: none
+      -webkit-appearance: none
+      border: 1px solid rgba(#fff, .3)
+      border-radius: 3px
+      background: rgba(#000, .6)
+      outline: 0
+      line-height: 50px
+      padding: 0 30px
+      color: #fff
+      font-size: 36px
+      font-weight: 100
+      opacity: .9
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+      transition: all ease-out .3s
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.075)
+      letter-spacing: .03em
+      @media (max-width: 640px)
+        font-size: 28px
+
+      &:hover
+        background: rgba(#000, .7)
+        border-color: rgba(#fff, .8)
+
+  .main-link-back
+    display: none
+    a
+      padding: 20px
+      border: 1px solid rgba(255, 255, 255, 0.3)
+      background: rgba(0, 0, 0, 0.6)
+      border-radius: 12px
+      transition: all ease-out .3s
+
+      &:hover
+        background: rgba(0, 0, 0, 0.7)
+        border: 1px solid rgba(255, 255, 255, 0.8)
+        color: #fff
+        opacity: 1
+
+.show-back
+  .main-link-back
+    display: block
+  .main-menu
+    display: none

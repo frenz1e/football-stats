@@ -1,0 +1,38 @@
+.page-tables
+  text-align: center
+  
+  table
+    th,
+    td
+      text-align: center
+
+      &:nth-child(3)
+        text-align: left
+        padding-left: 10px
+
+  .team-logo-holder
+    margin: 0 auto
+
+.data-table-row-enter
+  opacity: 0.01
+
+
+.data-table-row-enter.data-table-row-enter-active
+  opacity: 1
+  transition: opacity 500ms ease-in
+
+
+.data-table-row-leave
+  opacity: 1
+
+
+.data-table-row-leave.data-table-row-leave-active
+  opacity: 0.01
+  transition: opacity 300ms ease-in
+
+.data-table-row-appear
+  opacity: 0.01
+
+.data-table-row-appear.data-table-row-appear-active
+  opacity: 1
+  transition: opacity .5s ease-in
