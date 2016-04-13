@@ -1,6 +1,5 @@
 import React from 'react';
 import { Router, Route, browserHistory, IndexRedirect } from 'react-router';
-// import League from './containers/league';
 import App from './components/app';
 import Table from './containers/table';
 import Team from './containers/team';

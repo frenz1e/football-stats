@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
@@ -13,11 +12,10 @@ const reducer = combineReducers({
 });
 
 const logger = createLogger();
-const store = (process.env.NODE_ENV !== 'production') ?
-	createStore(reducer, compose(
+const store = createStore(reducer, compose(
 	  applyMiddleware(promise, logger),
 	  window.devToolsExtension ? window.devToolsExtension() : f => f
-	)) : createStore(reducer, applyMiddleware(promise));
+	))
 
 ReactDOM.render(
   <Provider store={store}>
