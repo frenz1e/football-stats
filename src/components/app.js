@@ -9,7 +9,7 @@ export default (props) => (
     <div className="main-layout">
       <header className="main-header">
         Football Stats
-        <a href="#" className="github-link"></a>
+        <a href="https://github.com/frenz1e/football-stats" className="github-link"></a>
       </header>
       <Navigation { ...props } />
       <div className="page">

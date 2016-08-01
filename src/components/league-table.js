@@ -12,8 +12,8 @@ class LeagueTable extends Component {
       table = leagueStanding.map(item => (
         <tr key={item.crestURI} className="data-table-row tr-link" onClick={() => this.props.handleRowClick(item)}>
           <td key={item.crestURI + 1}>
-            <div key={`${item.crestURI} img-wrap`} className="team-logo-holder">
-              <img key={`${item.crestURI} img`} src={item.crestURI} alt="logo" />
+            <div key={`${item.crestURI} + img-wrap`} className="team-logo-holder">
+              <img key={`${item.crestURI} + img`} src={item.crestURI} alt="logo" />
             </div>
           </td>
           <td key={item.crestURI + 2}>{item.position}</td>
@@ -59,7 +59,7 @@ class LeagueTable extends Component {
                       >
             */}
             { this.renderTableBody() }
-{/*  
+{/*
           </ReactCSSTransitionGroup>
 */}
           </tbody>

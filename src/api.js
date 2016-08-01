@@ -3,7 +3,7 @@ import { API_URL, TOKEN, BING_KEY, strTeamReplace } from './api-consts.js';
 
 function get(url) {
   return axios.get(API_URL + url,
-    { 
+    {
       headers: { 'X-Auth-Token': TOKEN },
       withCredentials: false
     }
@@ -11,12 +11,13 @@ function get(url) {
 }
 
 export function fetchLeagues() {
-  return get('soccerseasons/');
+  return get('competitions/?season=2016');
 }
 
 export function filterLeagues(leagues) {
-  const baseLeagues = [394, 396, 398, 399, 401, 402, 404];
-  return leagues.filter((league) => baseLeagues.indexOf(league.id) !== -1)
+  const unwantedLeagues = [424, 428, 431, 432, 435, 437];
+  return leagues.filter((league) => unwantedLeagues.indexOf(league.id) === -1)
+  return leagues;
 }
 
 export function fetchTable(id) {

@@ -9,7 +9,7 @@ import NoMatch from './components/no-match';
 const Routes = () => (
   <Router history={browserHistory}>
     <Route path="/" component={App}>
-    	<IndexRedirect to="/BL1/table" />
+    	<IndexRedirect to="/PL/table" />
       <Route name="table" path=":leagueName/table" component={Table} />
       <Route name="results" path=":leagueName/results" component={Fixtures} />
       <Route name="fixtures" path=":leagueName/fixtures" component={Fixtures} />

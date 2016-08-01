@@ -6,15 +6,15 @@ import { getTeamIdFromHref } from '../api';
 
 const renderRow = (item, homeTeam, awayTeam) => {
 	let result;
-	
+
 	switch (item.status) {
 		case 'POSTPONED':
 			result = <small>Postponed</small>;
 			break;
 		case 'FINISHED':
-			result = 
+			result =
 				(item.result.goalsHomeTeam === null ? '-' : item.result.goalsHomeTeam)
-				+ ' : ' + 
+				+ ' : ' +
 				(item.result.goalsAwayTeam === null ? '-' : item.result.goalsAwayTeam)
 			break;
 		case 'TIMED':
@@ -72,9 +72,9 @@ const LeagueFixtures = (props) => {
 	const fixtures = props.fixtures.map((item, index) => {
 		const homeTeam = props.teams.find((team) => team.name === item.homeTeamName);
 		const awayTeam = props.teams.find((team) => team.name === item.awayTeamName);
-		
+
 		const d = new Date(item.date.slice(0, 10));
-		const dateTitle = (date === d.getTime()) ? '' : <div className="fixtures-date">{dateformat(d, 'dddd d mmm yyyy')}</div>;		
+		const dateTitle = (date === d.getTime()) ? '' : <div className="fixtures-date">{dateformat(d, 'dddd d mmm yyyy')}</div>;
 		date = (date === d) ? date : d.getTime();
 
 		return (
