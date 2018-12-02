@@ -1,7 +1,7 @@
 import React from 'react';
 import AppBackground from './background';
 import Navigation from '../containers/navigation';
-import '../../sass/common.sass';
+import '../sass/common.sass';
 
 export default (props) => (
   <div>

@@ -5,11 +5,12 @@ import MainNav from '../components/main-nav';
 import { filterLeagues } from '../api';
 import _ from 'lodash';
 import { getLeagueByShortName, getLeagueById } from '../utils';
+import PropTypes from 'prop-types'
 
 class Nav extends React.Component {
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: PropTypes.object.isRequired
   }
 
   constructor(props) {

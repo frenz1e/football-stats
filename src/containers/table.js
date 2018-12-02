@@ -3,12 +3,12 @@ import LeagueTable from '../components/league-table';
 import { connect } from 'react-redux';
 import { getTeamId } from '../api';
 import { fetchTable } from '../actions/index';
-import _ from 'lodash';
+import PropTypes from 'prop-types';
 
 class Table extends Component {
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: PropTypes.object.isRequired
   }
 
   constructor(props) {

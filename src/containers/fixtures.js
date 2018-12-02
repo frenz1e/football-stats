@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { fetchResults, fetchFixtures, fetchTeams } from '../actions/index';
 import LeagueFixtures from '../components/league-fixtures';
@@ -14,7 +15,7 @@ class Results extends Component {
   }
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: PropTypes.object.isRequired
   }
 
   fetchData(leagueId) {

@@ -11,7 +11,7 @@ function get(url) {
 }
 
 export function fetchLeagues() {
-  return get('competitions/?season=2016');
+  return get(`competitions/?season=${(new Date()).getFullYear()}`);
 }
 
 export function filterLeagues(leagues) {
@@ -21,7 +21,7 @@ export function filterLeagues(leagues) {
 }
 
 export function fetchTable(id) {
-  return get(`soccerseasons/${id}/leagueTable`);
+  return get(`competitions/${id}/leagueTable`);
 }
 
 export function fetchTeamInfo(id) {
@@ -29,7 +29,7 @@ export function fetchTeamInfo(id) {
 }
 
 export function fetchTeams(id) {
-  return get(`soccerseasons/${id}/teams`);
+  return get(`competitions/${id}/teams`);
 }
 
 export function fetchTeamPlayers(id) {
@@ -45,11 +45,11 @@ export function getTeamIdFromHref(href) {
 }
 
 export function fetchPastFixtures(id) {
-  return get(`/soccerseasons/${id}/fixtures/?timeFrame=p14`);
+  return get(`/competitions/${id}/fixtures/?timeFrame=p14`);
 }
 
 export function fetchNextFixtures(id) {
-  return get(`/soccerseasons/${id}/fixtures/?timeFrame=n14`);
+  return get(`/competitions/${id}/fixtures/?timeFrame=n14`);
 }
 
 export function fetchBgImage(query) {
