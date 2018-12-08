@@ -1,32 +1,36 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { fetchTeamInfo, fetchTeamPlayers } from '../actions/index';
-import TeamInfo from '../components/team-info';
-import TeamPlayers from '../components/team-players-table';
-import { fetchTable, setBackButton } from '../actions/index';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { fetchTeamInfo, fetchTeamPlayers, setLeague } from '../actions/index'
+import TeamInfo from '../components/team-info'
+import TeamPlayers from '../components/team-players-table'
+import { setBackButton } from '../actions/index'
+import Loader from '../components/loader'
 
 class Team extends Component {
-
-  componentDidMount() {
-    this.props.dispatch(fetchTeamInfo(this.props.params.id));
-    this.props.dispatch(fetchTeamPlayers(this.props.params.id));
-    this.props.dispatch(setBackButton(true));
+  componentDidMount () {
+    const { loading, params, teamInfo } = this.props
+    const team = teamInfo[params.id]
+    if (!team) this.props.dispatch(fetchTeamInfo(this.props.params.id))
+    this.props.dispatch(setBackButton(true))
   }
 
-  render() {
-    return (
+  render () {
+    const { loading, params, teamInfo } = this.props
+    const team = teamInfo[params.id]
+    return loading ? <Loader /> : team ? (
       <div className="page-team">
-        <TeamInfo teamInfo={this.props.teamInfo} />
-        <TeamPlayers teamPlayers={this.props.teamPlayers} />
+        <TeamInfo teamInfo={team} />
+        <TeamPlayers teamPlayers={team.squad} />
       </div>
-    );
+    ) : null
   }
-
 }
 
 const mapStateToProps = (state) => ({
   teamInfo: state.teamInfo,
-  teamPlayers: state.teamPlayers
-});
+  teamPlayers: state.teamPlayers,
+  loading: state.loader.globalLoading,
+  league: state.league
+})
 
-export default connect(mapStateToProps)(Team);
+export default connect(mapStateToProps)(Team)

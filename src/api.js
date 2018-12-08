@@ -1,66 +1,70 @@
-import axios from 'axios';
-import { API_URL, TOKEN, BING_KEY, strTeamReplace } from './api-consts.js';
+import { API_URL, TOKEN, BING_KEY, strTeamReplace, LEAGUES, STATUSES } from './api-consts'
 
-function get(url) {
-  return axios.get(API_URL + url,
-    {
-      headers: { 'X-Auth-Token': TOKEN },
-      withCredentials: false
+async function get (url) {
+  return fetch(API_URL + url, {
+    headers: {
+      'X-Auth-Token': TOKEN,
     }
-  );
+  }).then(resp => resp.json()).then(data => data)
 }
 
-export function fetchLeagues() {
-  return get(`competitions/?season=${(new Date()).getFullYear()}`);
+export function fetchLeagues () {
+  return get(`competitions`)
 }
 
-export function filterLeagues(leagues) {
-  const unwantedLeagues = [424, 428, 431, 432, 435, 437];
-  return leagues.filter((league) => unwantedLeagues.indexOf(league.id) === -1)
-  return leagues;
+export function filterLeagues (league = {}) {
+  return league.code && LEAGUES.find(code => code === league.code)
 }
 
-export function fetchTable(id) {
-  return get(`competitions/${id}/leagueTable`);
+export function fetchStandings (id) {
+  return get(`competitions/${id}/standings`)
 }
 
-export function fetchTeamInfo(id) {
-  return get(`teams/${id}`);
+export function fetchTeamInfo (id) {
+  return get(`teams/${id}`)
 }
 
-export function fetchTeams(id) {
-  return get(`competitions/${id}/teams`);
+export function fetchTeams (id) {
+  return get(`competitions/${id}/teams`)
 }
 
-export function fetchTeamPlayers(id) {
-  return get(`teams/${id}/players`);
+export function fetchTeamPlayers (id) {
+  return get(`teams/${id}/players`)
 }
 
-export function getTeamId(team) {
-  return team._links.team.href.replace(strTeamReplace, '');
+export function getTeamId (team) {
+  return team._links.team.href.replace(strTeamReplace, '')
 }
 
-export function getTeamIdFromHref(href) {
-  return href.replace(strTeamReplace, '');
+export function getTeamIdFromHref (href) {
+  return href.replace(strTeamReplace, '')
 }
 
-export function fetchPastFixtures(id) {
-  return get(`/competitions/${id}/fixtures/?timeFrame=p14`);
+export function matchesInRange (id, dateFrom, dateTo) {
+  return get(`/competitions/${id}/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`)
 }
 
-export function fetchNextFixtures(id) {
-  return get(`/competitions/${id}/fixtures/?timeFrame=n14`);
+export function fetchFinished (id, day) {
+  return get(`/competitions/${id}/matches?status=${STATUSES.FINISHED}&matchday=${day}`)
 }
 
-export function fetchBgImage(query) {
+export function fetchInPlay (id, day) {
+  return get(`/competitions/${id}/matches?status=${STATUSES.IN_PLAY}&matchday=${day}`)
+}
+
+export function fetchScheduled (id, day) {
+  return get(`/competitions/${id}/matches?status=${STATUSES.SCHEDULED}&matchday=${day}`)
+}
+
+export function fetchBgImage (query) {
   let ImageFilters = [
     'Size:Large',
     'Style:Photo'
-  ];
+  ]
 
-  ImageFilters = ImageFilters.join('%2B');
+  ImageFilters = ImageFilters.join('%2B')
 
-  return axios.get(`https://api.datamarket.azure.com/Bing/Search/Image?$format=json&Query='${query}'&ImageFilters='${ImageFilters}'&$top=1`,
-    { headers: { Authorization: `Basic  ${BING_KEY}` } }
-  );
+  // return axios.get(`https://api.datamarket.azure.com/Bing/Search/Image?$format=json&Query='${query}'&ImageFilters='${ImageFilters}'&$top=1`,
+  //   { headers: { Authorization: `Basic  ${BING_KEY}` } }
+  // )
 }

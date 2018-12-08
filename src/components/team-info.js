@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 const TeamInfo = (props) => {
-  const { name, crestUrl, squadMarketValue } = props.teamInfo;
+  const { name, crestUrl, activeCompetitions = [] } = props.teamInfo
 
   return (
     <div className="text-center">
@@ -10,11 +10,11 @@ const TeamInfo = (props) => {
       </div>
       <h1 className="team-name">{name}</h1>
       <h3 className="team-market-value">
-        <span className="subtitle">Squad Market value:</span>
-        {squadMarketValue}
+        <span className="subtitle">Active competitions:</span>
+        {activeCompetitions.map(({ name }) => name).join(', ')}
       </h3>
     </div>
-  );
-};
+  )
+}
 
-export default TeamInfo;
+export default TeamInfo

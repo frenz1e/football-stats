@@ -1,45 +1,46 @@
-import React, { Component } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import Flag from 'react-flags';
-import Loader from './loader';
-import PlayerPosition from './player-position';
-import { getCode, calculateAge } from '../utils';
+import React, { Component } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import Flag from 'react-flags'
+import Loader from './loader'
+import PlayerPosition from './player-position'
+import { getCode, calculateAge } from '../utils'
+import { registerLocale, getAlpha2Code } from 'i18n-iso-countries'
 
 class PlayersTable extends Component {
+  componentDidMount () {
+    registerLocale(require("i18n-iso-countries/langs/en.json"))
+  }
 
-  renderTableBody() {
-    const players = this.props.teamPlayers;
-    let table = null;
-
-    if (players) {
-      table = players.map(player => (
-        <tr key={player.jerseyNumber + player.name + 1} className="data-table-row">
-          <td key={player.jerseyNumber + player.name + 2}>
-            <span className="player__number">{player.jerseyNumber}</span>
+  renderTableBody () {
+    return (this.props.teamPlayers || []).map(player => {
+      let country = player.nationality || player.countryOfBirth
+      if (country === 'United States') country = 'United States of America'
+      if (country === 'England') country = 'United Kingdom'
+      const code = getAlpha2Code(country, 'en')
+      return player.position && (
+        <tr key={player.id} className="data-table-row">
+          <td>
+            <span className="player__number">{player.shirtNumber}</span>
           </td>
-          <td key={player.jerseyNumber + player.name + 3}>
+          <td>
             <PlayerPosition position={player.position} className="player__position" />
           </td>
-          <td key={player.jerseyNumber + player.name + 4}>
+          <td>
             <span className="player__name">{player.name}</span>
           </td>
-          <td key={player.jerseyNumber + player.name + 5} title={player.nationality}>
-            <Flag
-              name={getCode(player.nationality)}
+          <td title={player.nationality || player.countryOfBirth}>
+            {code ? <Flag
+              name={code || ''}
               format="png"
               pngSize={24}
               shiny={true}
               basePath="/images"
-              alt={getCode(player.nationality)}
-            />
+            /> : player.nationality || player.countryOfBirth}
           </td>
-          <td key={player.jerseyNumber + player.name + 6}>{calculateAge(player.dateOfBirth)}</td>
-          <td key={player.jerseyNumber + player.name + 8}>{player.marketValue || '-'}</td>
+          <td>{calculateAge(player.dateOfBirth)}</td>
         </tr>
-      ));
-    }
-
-    return table;
+      )
+    }).filter(Boolean)
   }
 
   renderTableLayout() {
@@ -53,7 +54,6 @@ class PlayersTable extends Component {
               <th>Player Name</th>
               <th>Nat.</th>
               <th>Age</th>
-              <th>Market value</th>
             </tr>
           </thead>
           <ReactCSSTransitionGroup
@@ -68,12 +68,12 @@ class PlayersTable extends Component {
           </ReactCSSTransitionGroup>
         </table>
       </div>
-    );
+    )
   }
 
   render() {
-    return this.props.teamPlayers ? this.renderTableLayout() : <Loader />;
+    return this.props.teamPlayers ? this.renderTableLayout() : <Loader />
   }
 }
 
-export default PlayersTable;
+export default PlayersTable

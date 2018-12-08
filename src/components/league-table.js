@@ -1,39 +1,35 @@
-import React, { Component } from 'react';
-import Loader from './loader';
-// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import React, { Component } from 'react'
+import Loader from './loader'
+// import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 class LeagueTable extends Component {
-
-  renderTableBody() {
-    const leagueStanding = this.props.league.standing;
-    let table = null;
-
-    if (leagueStanding) {
-      table = leagueStanding.map(item => (
-        <tr key={item.crestURI} className="data-table-row tr-link" onClick={() => this.props.handleRowClick(item)}>
-          <td key={item.crestURI + 1}>
-            <div key={`${item.crestURI} + img-wrap`} className="team-logo-holder">
-              <img key={`${item.crestURI} + img`} src={item.crestURI} alt="logo" />
+  renderTableBody () {
+    const { table } = this.props
+    return (
+      table.map(({ team, ...item }) => (
+        <tr key={team.id} className="data-table-row tr-link" onClick={() => this.props.handleRowClick(team)}>
+          <td>
+            <div className="team-logo-holder">
+              <img src={team.crestUrl} alt="logo" />
             </div>
           </td>
-          <td key={item.crestURI + 2}>{item.position}</td>
-          <td key={item.crestURI + 3}>{item.teamName}</td>
-          <td key={item.crestURI + 8}>{item.playedGames}</td>
-          <td key={item.crestURI + 4}>{item.wins}</td>
-          <td key={item.crestURI + 5}>{item.draws}</td>
-          <td key={item.crestURI + 6}>{item.losses}</td>
-          <td key={item.crestURI + 7}>{item.goalDifference}</td>
-          <td key={item.crestURI + 9}>{item.points}</td>
+          <td>{item.position}</td>
+          <td>{team.name}</td>
+          <td>{item.playedGames}</td>
+          <td>{item.won}</td>
+          <td>{item.draw}</td>
+          <td>{item.lost}</td>
+          <td>{item.goalDifference}</td>
+          <td>{item.points}</td>
         </tr>
-      ));
-    }
-
-    return table;
+      ))
+    )
   }
 
-  renderTableLayout() {
+  renderTableLayout () {
     return (
       <div className="container">
+        <div style={{position: 'relative'}}>{this.props.loading && <Loader />}</div>
         <table className="table">
           <thead>
             <tr>
@@ -49,7 +45,7 @@ class LeagueTable extends Component {
             </tr>
           </thead>
           <tbody>
-{/*          <ReactCSSTransitionGroup
+            {/*          <ReactCSSTransitionGroup
                         component="tbody"
                         transitionName="data-table-row"
                         transitionEnterTimeout={500}
@@ -59,19 +55,18 @@ class LeagueTable extends Component {
                       >
             */}
             { this.renderTableBody() }
-{/*
+            {/*
           </ReactCSSTransitionGroup>
 */}
           </tbody>
         </table>
       </div>
-    );
+    )
   }
 
-  render() {
-    return this.props.league.leagueCaption ? this.renderTableLayout() : <Loader />;
+  render () {
+    return this.props.table.length ? this.renderTableLayout() : <Loader />
   }
 }
 
-
-export default LeagueTable;
+export default LeagueTable

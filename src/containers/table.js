@@ -1,59 +1,41 @@
-import React, { Component } from 'react';
-import LeagueTable from '../components/league-table';
-import { connect } from 'react-redux';
-import { getTeamId } from '../api';
-import { fetchTable } from '../actions/index';
-import PropTypes from 'prop-types';
-
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
+import { getTeamId } from '../api'
+import { fetchStandings } from '../actions/index'
+import LeagueTable from '../components/league-table'
+import _ from 'lodash'
 class Table extends Component {
-
-  static contextTypes = {
-    router: PropTypes.object.isRequired
+  state = {
+    leagueId: ''
   }
 
-  constructor(props) {
-    super(props);
-    this.handleRowClick = this.handleRowClick.bind(this);
-    this.state = {
-      leagueId: null
-    };
-  }
-
-  componentWillMount() {
-    const leagueId = this.props.league.id;
-    if (leagueId) {
-      this.setState({ leagueId });
-      this.props.dispatch(fetchTable(leagueId));
+  static getDerivedStateFromProps(props, state) {
+    if (props.league.id && props.league.id !== state.leagueId) {
+      props.dispatch(fetchStandings(props.league.id))
+      return { leagueId: props.league.id }
     }
+    return null
   }
 
-  componentWillReceiveProps(nextProps) {
-    const leagueId = nextProps.league.id;
-
-    if (leagueId && leagueId != this.state.leagueId) {
-      this.setState({ leagueId });
-      this.props.dispatch(fetchTable(leagueId));
-    }
-  }
-
-  handleRowClick(item) {
-    const id = getTeamId(item);
-    this.context.router.push(`/team/${id}`);
+  handleRowClick = team => {
+    this.props.router.push(`/team/${team.id}`)
   }
 
   render() {
     return (
       <div className="page-tables">
-        <LeagueTable league={this.props.table} handleRowClick={this.handleRowClick} />
+        <LeagueTable table={this.props.table} handleRowClick={this.handleRowClick} loading={this.props.loading} />
       </div>
-    );
+    )
   }
 
 }
 
 const mapStateToProps = (state) => ({
   league: state.league,
+  loading: state.loader.globalLoading,
   table: state.table
-});
+})
 
-export default connect(mapStateToProps)(Table);
+export default withRouter(connect(mapStateToProps)(Table))

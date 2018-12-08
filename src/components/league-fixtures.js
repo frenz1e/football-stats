@@ -1,46 +1,41 @@
-import React from 'react';
-import Loader from './loader';
-import dateformat from 'dateformat';
-import { Link } from 'react-router';
-import { getTeamIdFromHref } from '../api';
+import React from 'react'
+import Loader from './loader'
+import moment from 'moment'
+import { Link } from 'react-router'
+import { STATUSES } from '../api-consts'
+import _ from 'lodash'
 
-const renderRow = (item, homeTeam, awayTeam) => {
-  let result;
-
-  switch (item.status) {
-    case 'POSTPONED':
-      result = <small>Postponed</small>;
-      break;
-    case 'FINISHED':
-      result =
-        (item.result.goalsHomeTeam === null ? '-' : item.result.goalsHomeTeam)
-        + ' : ' +
-        (item.result.goalsAwayTeam === null ? '-' : item.result.goalsAwayTeam)
-      break;
-    case 'TIMED':
-      const d = new Date(item.date);
-      const minutes = ('0' + d.getMinutes()).slice(-2);
-      const hours = ('0' + d.getHours()).slice(-2);
-      result = `${hours} : ${minutes}`;
-      break;
-    case 'IN_PLAY':
-      result = <div className="inplay">In Play</div>
-      break;
+const renderRow = ({ status, homeTeam, awayTeam, score }, teams) => {
+  let result
+  const matchScore =  `${_.get(score, 'fullTime.homeTeam', '-')} : ${_.get(score, 'fullTime.awayTeam', '-')}`
+  switch (status) {
+    case STATUSES.POSTPONED:
+      result = <small>Postponed</small>
+      break
+    case STATUSES.FINISHED:
+      result = matchScore
+      break
+    case STATUSES.PAUSED:
+    case STATUSES.IN_PLAY:
+      result = <div>{matchScore}<small className="inplay">in play</small></div>
+      break
     default:
-      result = '- : -';
-      break;
+      result = '- : -'
+      break
   }
+  const homeImg = _.get(teams.find(({ team }) => team.id === homeTeam.id), 'team.crestUrl', '')
+  const awayImg = _.get(teams.find(({ team }) => team.id === awayTeam.id), 'team.crestUrl', '')
 
   return (
     <div className="fixtures-row">
       <div className="fixtures-home-team">
-        <Link to={`/team/${getTeamIdFromHref(item._links.homeTeam.href)}`}>
+        <Link to={`/team/${homeTeam.id}`}>
           <div className="team-badge">
             <div className="team-badge-name">
-              {item.homeTeamName}
+              {homeTeam.name}
             </div>
             <div className="team-logo-holder">
-              <img src={homeTeam && homeTeam.crestUrl} alt=""/>
+              {homeImg && <img src={homeImg} alt=""/>}
             </div>
           </div>
         </Link>
@@ -51,41 +46,41 @@ const renderRow = (item, homeTeam, awayTeam) => {
         </div>
       </div>
       <div className="fixtures-away-team">
-        <Link to={`/team/${getTeamIdFromHref(item._links.awayTeam.href)}`}>
+        <Link to={`/team/${awayTeam.id}`}>
           <div className="team-badge">
             <div className="team-logo-holder">
-              <img src={awayTeam && awayTeam.crestUrl} alt=""/>
+              {awayImg && <img src={awayImg} alt=""/>}
             </div>
             <div className="team-badge-name">
-              {item.awayTeamName}
+              {awayTeam.name}
             </div>
           </div>
         </Link>
       </div>
     </div>
   )
-};
-
-const LeagueFixtures = (props) => {
-  let date = null;
-
-  const fixtures = props.fixtures.map((item, index) => {
-    const homeTeam = props.teams.find((team) => team.name === item.homeTeamName);
-    const awayTeam = props.teams.find((team) => team.name === item.awayTeamName);
-
-    const d = new Date(item.date.slice(0, 10));
-    const dateTitle = (date === d.getTime()) ? '' : <div className="fixtures-date">{dateformat(d, 'dddd d mmm yyyy')}</div>;
-    date = (date === d) ? date : d.getTime();
-
-    return (
-      <div key={index + item.date}>
-        {dateTitle}
-        {renderRow(item, homeTeam, awayTeam)}
-      </div>
-    );
-  });
-
-  return fixtures.length ? <div>{fixtures}</div> : <Loader />;
 }
 
-export default LeagueFixtures;
+const LeagueFixtures = props => {
+  const rows = props.data.map(item => {
+    const showTime = [STATUSES.IN_PLAY, STATUSES.PAUSED, STATUSES.SCHEDULED].indexOf(item.status) !== -1
+    return (
+      <div key={item.id}>
+        <div className="fixtures-date">
+          {moment(item.utcDate).format('DD MMM YYYY')}
+          {showTime && <span className='fixture-time'>{moment(item.utcDate).format('HH:mm')}</span>}
+        </div>
+        {renderRow(item, props.teams)}
+      </div>
+    )
+  })
+
+  return rows.length ? (
+    <div>
+      <div style={{ position: 'relative' }}>{props.loading && <Loader />}</div>
+      {rows}
+    </div>
+  ) : <Loader />
+}
+
+export default LeagueFixtures

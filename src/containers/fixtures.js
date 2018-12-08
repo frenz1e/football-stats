@@ -1,76 +1,44 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux';
-import { fetchResults, fetchFixtures, fetchTeams } from '../actions/index';
-import LeagueFixtures from '../components/league-fixtures';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { fetchResults, fetchSchedules } from '../actions/index'
+import LeagueFixtures from '../components/league-fixtures'
+import { withRouter } from 'react-router'
 
 class Results extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      leagueId: null
-    }
+  state = {
+    leagueId: '',
+    type: '',
   }
 
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  }
-
-  fetchData(leagueId) {
-    if (this.props.route.name === 'results') {
-      this.props.dispatch(fetchResults(leagueId));
-    } else {
-      this.props.dispatch(fetchFixtures(leagueId));
-    }
-  }
-
-  componentDidMount() {
-    const leagueId = this.props.league.id;
-    if (leagueId && leagueId != this.state.leagueId) {
-      this.setState({
-        leagueId
-      });
-      this.props.dispatch(fetchTeams(leagueId));
-      this.fetchData(leagueId);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const leagueId = nextProps.league.id;
-    if (leagueId && leagueId != this.state.leagueId) {
-      this.setState({
-        leagueId
-      });
-      this.props.dispatch(fetchTeams(leagueId));
-      this.fetchData(leagueId);
-    }
-    if (leagueId && this.props.route.name !== nextProps.route.name) {
-      if (nextProps.route.name === 'results') {
-        this.props.dispatch(fetchResults(leagueId));
-      } else {
-        this.props.dispatch(fetchFixtures(leagueId));
+  static getDerivedStateFromProps(props, state) {
+    const { dispatch, route, league } = props
+    if (league.id && (league.id !== state.leagueId || route.name !== state.type)) {
+      if (route.name === 'results') {
+        dispatch(fetchResults(league))
+      } else if (route.name === 'fixtures') {
+        dispatch(fetchSchedules(league))
       }
+      return { leagueId: league.id, type: route.name }
     }
+    return null
   }
 
-  render() {
-    const fixtures = this.props.route.name === 'results' ? this.props.results : this.props.fixtures;
+  render () {
+    const data = this.props.route.name === 'results' ? this.props.results : this.props.schedules
     return (
-      <LeagueFixtures fixtures={fixtures} teams={this.props.teams} />
+      <LeagueFixtures data={data} teams={this.props.table} loading={this.props.loading}/>
     )
   }
-
 }
 
 const mapStateToProps = (state) => {
   return {
+    loading: state.loader.globalLoading,
     league: state.league,
     results: state.results,
-    teams: state.teams,
-    fixtures: state.fixtures
+    table: state.table,
+    schedules: state.schedules
   }
 }
 
-export default connect(mapStateToProps)(Results);
+export default withRouter(connect(mapStateToProps)(Results))

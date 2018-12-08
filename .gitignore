@@ -2,3 +2,5 @@ node_modules
 dist
 public
 src/api-consts.js
+.package-lock.json
+.idea

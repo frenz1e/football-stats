@@ -3,7 +3,7 @@ import React from 'react';
 function renderSelect(items) {
   return ((items) ? items.map(item => (
       <option key={item.id} value={item.id}>
-        {item.caption}
+        {item.area.name} {item.name}
       </option>
   )) : <option value=""></option>);
 }

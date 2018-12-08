@@ -9,9 +9,9 @@ function positionIcon(position) {
     let bgColor = '#fff';
     const position_ = position.toLowerCase().trim();
 
-    if (position_ === 'keeper') {
+    if (position_ === 'goalkeeper') {
       bgColor = '#f68b39';
-    } else if (position_.indexOf('back') !== -1) {
+    } else if (position_.indexOf('defender') !== -1) {
       bgColor = '#42afe3';
     } else if (position_.indexOf('midfield') !== -1) {
       bgColor = '#97cd76';

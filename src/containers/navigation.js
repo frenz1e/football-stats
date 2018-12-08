@@ -1,68 +1,37 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { fetchLeagues, setLeague, setBackButton } from '../actions/index';
-import MainNav from '../components/main-nav';
-import { filterLeagues } from '../api';
-import _ from 'lodash';
-import { getLeagueByShortName, getLeagueById } from '../utils';
-import PropTypes from 'prop-types'
+import React from 'react'
+import { connect } from 'react-redux'
+import { fetchLeagues, setLeague, setBackButton } from '../actions/index'
+import MainNav from '../components/main-nav'
+import { withRouter } from 'react-router'
+import _ from 'lodash'
 
 class Nav extends React.Component {
-
-  static contextTypes = {
-    router: PropTypes.object.isRequired
+  componentDidMount () {
+    const leagueName = this.props.params.leagueName
+    this.props.dispatch(fetchLeagues(leagueName))
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      leagueShortName: ''
-    };
-    this.onBackButtonClick = this.onBackButtonClick.bind(this);
-    this.onSelectChange = this.onSelectChange.bind(this);
+  onSelectChange = e => {
+    const leagues = this.props.leagues
+    const id = e.target.value
+    const league = leagues.find(l => l.id == id)
+    this.props.dispatch(setLeague(league))
+    const routeName = _.last(this.props.routes).name
+    this.props.router.push(`/${league.code}/${routeName}`)
   }
 
-  componentWillMount() {
-    if (!this.props.leagues.length) {
-      this.props.dispatch(fetchLeagues());
+  onBackButtonClick = () => {
+    if (this.props.league.id) {
+      this.props.router.goBack()
+      this.props.dispatch(setBackButton(false))
+    } else {
+      window.location.href = '/'
     }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const leagues = nextProps.leagues;
-    const leagueShortName = nextProps.params.leagueName;
-    // after receive leagues
-    if (nextProps.params.leagueName && nextProps.backButton) {
-      this.props.dispatch(setBackButton(false));
-    }
-
-    if (leagues.length) {
-      if (leagueShortName && leagueShortName != this.state.leagueShortName) {
-        this.setState({ leagueShortName });
-        this.props.dispatch(setLeague(getLeagueByShortName(leagueShortName, leagues)));
-      }
-    }
-  }
-
-  onSelectChange(event) {
-    const leagues = this.props.leagues;
-    const leagueId = event.target.value;
-    const league = getLeagueById(leagueId, leagues);
-    const routeName = _.last(this.props.routes).name;
-    this.context.router.push(`/${league.league}/${routeName}`);
-  }
-
-  onBackButtonClick(event) {
-    this.context.router.goBack();
-    this.props.dispatch(setBackButton(false));
-  }
-
-  setComponentsLeague(league) {
   }
 
   render() {
-    const extraClass = this.props.backButton ? ' show-back' : '';
-    const leagues = filterLeagues(this.props.leagues);
+    const extraClass = this.props.backButton ? ' show-back' : ''
+    const { leagues } = this.props
     return (
       <MainNav
         extraClass={extraClass}
@@ -71,7 +40,7 @@ class Nav extends React.Component {
         leagues={leagues}
         league={this.props.league}
       />
-    );
+    )
   }
 }
 
@@ -79,6 +48,6 @@ const mapStateToProps = (state) => ({
   leagues: state.leagues,
   league: state.league,
   backButton: state.backButton
-});
+})
 
-export default connect(mapStateToProps)(Nav);
+export default withRouter(connect(mapStateToProps)(Nav))
