@@ -44,6 +44,10 @@ export function matchesInRange (id, dateFrom, dateTo) {
   return get(`/competitions/${id}/matches?dateFrom=${dateFrom}&dateTo=${dateTo}`)
 }
 
+export function fetchMatchInfo (id) {
+  return get(`/matches/${id}`)
+}
+
 export function fetchFinished (id, day) {
   return get(`/competitions/${id}/matches?status=${STATUSES.FINISHED}&matchday=${day}`)
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchResults, fetchSchedules } from '../actions/index'
+import { fetchResults, fetchSchedules, toggleMatchInfo } from '../actions/index'
 import LeagueFixtures from '../components/league-fixtures'
 import { withRouter } from 'react-router'
 
@@ -23,10 +23,19 @@ class Results extends Component {
     return null
   }
 
+  onResultClick = row => {
+    this.props.dispatch(toggleMatchInfo(row.id))
+  }
+
   render () {
     const data = this.props.route.name === 'results' ? this.props.results : this.props.schedules
     return (
-      <LeagueFixtures data={data} teams={this.props.table} loading={this.props.loading}/>
+      <LeagueFixtures
+        data={data}
+        teams={this.props.table}
+        loading={this.props.loading}
+        onResultClick={this.onResultClick}
+      />
     )
   }
 }

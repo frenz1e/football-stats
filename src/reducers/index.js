@@ -109,3 +109,27 @@ export function table (state = [], action) {
       return state
   }
 }
+
+export function matchInfo (state = {}, action) {
+  switch (action.type) {
+    case 'FETCH_MATCH_INFO_SUCCESS':
+      return { ...state, [_.get(action.payload, 'data.match.id')]: action.payload.data }
+    default:
+      return state
+  }
+}
+
+export function matchInfoVisible (state = [], { id, type }) {
+  switch (type) {
+    case 'TOGGLE_MATCH_INFO':
+      let newState = [...state]
+      if (state.indexOf(id) >= 0) {
+        newState = newState.filter(el => el !== id)
+      } else {
+        newState.push(id)
+      }
+      return newState
+    default:
+      return state
+  }
+}

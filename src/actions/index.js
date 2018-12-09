@@ -132,3 +132,26 @@ export function fetchSchedules (league = {}) {
     }
   }
 }
+
+export function fetchMatchInfo (id) {
+  return async dispatch => {
+    try {
+      dispatch({ type: 'FETCH_MATCH_INFO_REQUEST' })
+      const data = await API.fetchMatchInfo(id)
+      dispatch({ type: 'FETCH_MATCH_INFO_SUCCESS', payload: { data } })
+    } catch (error) {
+      console.error(error)
+      dispatch({ type: 'FETCH_MATCH_INFO_ERROR', payload: { error } })
+    }
+  }
+}
+
+export function toggleMatchInfo (id) {
+  return async (dispatch, getState) => {
+    const { matchInfoVisible } = getState()
+    if (matchInfoVisible.indexOf(id) === -1) {
+      dispatch(fetchMatchInfo(id))
+    }
+    dispatch({ type: 'TOGGLE_MATCH_INFO', id })
+  }
+}
