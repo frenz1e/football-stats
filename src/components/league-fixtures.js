@@ -71,7 +71,6 @@ class LeagueFixtures extends Component {
     const { matchInfoVisible, matchInfo, data, loading } = this.props
     const rows = data.map(item => {
       const showTime = [STATUSES.IN_PLAY, STATUSES.PAUSED, STATUSES.SCHEDULED].indexOf(item.status) !== -1
-      const info = matchInfo[item.id]
       return (
         <div key={item.id}>
           <div className="fixtures-date">
