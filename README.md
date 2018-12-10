@@ -2,4 +2,4 @@
 
 React/Redux webapp 
 
-ef-stats.herokuapp.com
+[Sample](http://ef-stats.herokuapp.com)
